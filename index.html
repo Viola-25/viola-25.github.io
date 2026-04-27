@@ -559,11 +559,18 @@
             margin-left: 4px;  /* Pequena margem para separar do switch */
         }
 
+        /* Seção editorial para revisores e conteúdo de apoio ao usuário */
+        .about-section { background-color: var(--card-bg); border-radius: 12px; padding: 18px; margin-bottom: 20px; border: 1px solid var(--border-color); }
+        .about-section h2 { margin-top: 0; }
+        .sample-result { background: var(--bg-color); border: 1px dashed var(--border-color); padding: 12px; border-radius: 8px; font-family: 'Courier New', monospace; white-space: pre-wrap; }
+        .ad-slot { margin: 12px 0; text-align: center; border: 1px dashed transparent; }
+
     </style>
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9966361899750512"
      crossorigin="anonymous"></script>
 </head>
 <body>
+    <meta name="description" content="Processador de laudos clínicos: extração e síntese rápida de resultados laboratoriais para facilitar registro em prontuário. Ferramenta para médicos e profissionais de saúde.">
     <main class="page-wrapper">
         <div class="container"> <!-- Conteúdo Principal -->
             <div class="header header-main">
@@ -583,6 +590,39 @@
                 2. Cole na caixa abaixo e clique em <strong>Analisar Laudo</strong>. Selecione os exames na barra lateral para gerar o resultado formatado, pronto para colar no prontuário.<br>
                 <small><strong>Atenção:</strong> No momento, o script é otimizado para laudos da <strong>AFIP</strong>.</small></p>
             </div>
+            <!-- Seção editorial: fornece conteúdo estático e exemplo para revisores do AdSense -->
+            <section class="about-section" aria-labelledby="about-title">
+                <h2 id="about-title">Sobre esta ferramenta</h2>
+                <p>
+                O Processador de Laudos é uma ferramenta desenvolvida para acelerar a extração e a formatação
+                de resultados laboratoriais a partir de laudos clínicos. Destina-se a médicos e equipe
+                de enfermagem que precisam transcrever com segurança os resultados para prontuários eletrônicos.
+                Esta página combina uma interface interativa com documentação concisa e exemplos de saída para
+                garantir que revisores humanos e sistemas automáticos encontrem conteúdo editorial visível e
+                permanente na página inicial.
+                </p>
+                <p>
+                Exemplo de uso: cole o texto completo do laudo no campo principal, selecione os exames desejados
+                na barra lateral e clique em "Analisar Laudo". Sempre verifique os valores e referências antes
+                de incluir no prontuário. Abaixo há um exemplo de resultado gerado pela ferramenta, que ilustra
+                o formato final apresentado ao profissional de saúde.
+                </p>
+                <div class="sample-result" aria-hidden="false">
+>> 27/04: HB 14.2 / HT 42 / LEUCO 7.3 / CR 0.90 / TGO 22 / TGP 25 / PCR 0.3 / Glic 95
+                </div>
+                                <div class="ad-slot" aria-hidden="true">
+                                        <!-- Bloco de anúncio responsivo (substitua data-ad-slot pelo seu ID) -->
+                                        <ins class="adsbygoogle"
+                                                 style="display:block"
+                                                 data-ad-client="ca-pub-9966361899750512"
+                                                 data-ad-slot="8549337801"
+                                                 data-ad-format="auto"
+                                                 data-full-width-responsive="true"></ins>
+                                        <script>
+                                            (adsbygoogle = window.adsbygoogle || []).push({});
+                                        </script>
+                                </div>
+            </section>
             <div class="disclaimer">
                 <strong>Atenção (BETA):</strong> Esta ferramenta é um auxílio e está em fase de testes. Sempre confira os resultados e os valores de referência com o laudo original antes de tomar qualquer decisão clínica.
             </div>
@@ -638,7 +678,7 @@
             </div>
 
             <!-- Elemento da notificação Toast -->
-            <div id="toast"></div>
+            <div id="toast" aria-live="polite" role="status"></div>
         </div>
 
         <aside class="sidebar">
@@ -660,8 +700,8 @@
             <h3>Confirmar Ação</h3>
             <p>Tem certeza que deseja apagar todo o histórico de resultados? Esta ação não pode ser desfeita.</p>
             <div class="modal-actions">
-                <button id="btn-confirm-delete" class="btn-primary">Sim, apagar</button>
-                <button id="btn-cancel-delete" class="btn-secondary">Cancelar</button>
+                <button type="button" id="btn-confirm-delete" class="btn-primary">Sim, apagar</button>
+                <button type="button" id="btn-cancel-delete" class="btn-secondary">Cancelar</button>
             </div>
         </div>
     </div>
@@ -685,15 +725,15 @@
             <h2>Painel de Diagnóstico (Admin)</h2>
             <p class="instructions">Esta seção é para desenvolvedores. Use para verificar a integridade da lógica de extração de dados após fazer alterações no código.</p>
             <div class="actions">
-                <button id="btn-run-tests" class="btn-secondary">Rodar Testes de Integridade</button>
+                <button type="button" id="btn-run-tests" class="btn-secondary">Rodar Testes de Integridade</button>
             </div>
             <pre id="test-results" style="background-color: var(--bg-color); border-radius: 8px; padding: 16px; margin-top: 16px; display: none; white-space: pre-wrap; word-wrap: break-word;"></pre>
         </div>
     </div>
 
     <!-- Botão para revelar a seção de testes -->
-    <div style="text-align: center; margin-top: 32px;">
-        <button id="btn-toggle-tests" style="background: none; border: none; color: var(--secondary-color); cursor: pointer; font-size: 12px; padding: 8px;">
+        <div style="text-align: center; margin-top: 32px;">
+        <button type="button" id="btn-toggle-tests" style="background: none; border: none; color: var(--secondary-color); cursor: pointer; font-size: 12px; padding: 8px;">
             Painel de Diagnóstico
         </button>
     </div>
@@ -1779,7 +1819,7 @@ function extrairBlocoExame(textoParaAnalisar, exameConfig, todosNomesBuscaFiltra
             return;
         }
         const examesFiltrados = examesEncontradosGlobal.filter(exame => {
-            const label = exame.label.toLowerCase();
+            const label = removerAcentos(exame.label.toLowerCase());
 
             // Verifica se o termo de busca está no label curto ou em algum dos nomes de busca (sinônimos)
             return label.includes(termoNormalizado) || 

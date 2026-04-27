@@ -173,4 +173,4 @@ Este projeto está sob a licença MIT - veja o arquivo [LICENSE](LICENSE) para d
 
 **Desenvolvido com ❤️ para melhorar a experiência de profissionais de saúde**
 
-*Última atualização: Dezembro 2025*
+*Última atualização: 27 Abril 2026*
